@@ -1,0 +1,39 @@
+<html lang="ja">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>oha_oya_counter</title>
+    </head>
+    <body>
+        <h1>oha_oya_counter</h1>
+        <p id="oha_oya" />
+        <script src="js/ncmb.min.js" charset="utf-8"></script> 
+        <script>
+            function getNow(){
+              var now = new Date();
+              var hour = now.getHours();
+              var min = now.getMinutes();
+
+              var s = hour + "時" + min + "分";
+              return s
+            }
+            // 日付の取得
+            const today = (new Date(Date.now())).toISOString().substring(0, 10); // "yyyy-MM-dd"
+
+            // mobile backend からの登録件数取得
+            // 抽出条件は本日日付であり、かつ item フィールドが "okashi" であるもの
+            const ncmb = new NCMB("fa18b8060f2df50b1e200a8d7021a32d5cb9d6958c8a7bfc20dfce354d38a0db","41152ee29a51bfc4fd728d60d96b339a223c13a854b431fb6b53957bcb76fdd3");
+            const history = ncmb.DataStore("history");
+            history.equalTo("date", today)
+                    .equalTo("item", "ohayo")
+                    //.getNow()
+                    //.fetchAll()
+                    .then(function(results){
+                        // 結果が取得できた場合 
+                        document.getElementById("oha_oya").textContent = "本日(" + today + ")は" + s + "に起きました";
+            }).catch(function(err){
+                        // 結果の取得に失敗した場合 
+                        document.getElementById("todayOkashi").textContent = "本日のお菓子回数の取得に失敗しました。エラー:" + err;
+            });
+        </script>
+    </body>
+</html>
